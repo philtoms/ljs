@@ -8,9 +8,15 @@ html lang:'en', ->
     title @title if @title
     script src:'http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-1.7-development-only.js'
     script src:'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'
+    script src:'http:/socket.io/socket.io.js'
+    script src: '/zappa/zappa.js'
+    script src: '/viewsync.js'
     if @scripts
       for s in @scripts
-        script src: s + '.js'
+        if typeof s is 'object'
+            text "<script>#{s.inline}</script>" 
+        else  
+          script(src: s + '.js')
     if @script
       if typeof @script is 'object'
           text "<script>#{@script.inline}</script>" 

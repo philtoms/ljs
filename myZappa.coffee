@@ -8,21 +8,25 @@ toTitle = (t) -> t.replace(/([A-Z])/g, (str)->' '+str.toLowerCase())
 # wrap app context with extras and export as 'zappa'
 module.exports = (app) -> 
   run -> # passes this fn to zappa.run
+    ctx=@
     @includeRoute = (r,routes) ->
       routeHandler = {} #use this syntax to get a variable into a key
       routeHandler[r.toLowerCase()] = ->
-        view = {}
-        view[toText r.toLowerCase(),'index'] = 
-          tailscript:'/googlea'
-          stylesheet: 'style/basestyle'
-          nav: ->
-            ul=['<ul>']
-            for r in routes
-              ul.push '<li><span>*</span><a href="'+r.toLowerCase()+'">'+toTitle toText(r,'Home')+'</a></li>'
-            ul.push '</ul>'
-            ul.join('')
+        ctx.store.all (err,data) =>
+          view = {}
+          view[toText r.toLowerCase(),'index'] =
+            data: data
+            tailscript:'/googlea'
+            stylesheet: 'style/basestyle'
+            nav: ->
+              ul=['<ul>']
+              for r in routes
+                ul.push "<li><span>*</span><a href='#{r.toLowerCase()}'>#{toTitle toText(r,'Home')}</a></li>"
+              ul.push '</ul>'
+              ul.join('')
+          
+          @render view
 
-        @render view
       @get routeHandler 
            
     @nav = (routes) ->

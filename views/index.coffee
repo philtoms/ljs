@@ -3,22 +3,26 @@
 @description = 'Top notch car servicing brought to your door in and around Swadlincote'
 @introtext = 'With over 15 years experience in the industry we can service, repair or diagnose faults without you even having to leave your home or workplace.'
 @script = inline:'''
-$(function(){
-  var quote=0;
-  var pos = $("figure").position();
+  $(function(){
+    var quote=0;
+    var pos = $("figure").position();
 
-  $("#price p").hide().each(function(){
-   var xy=$(this).attr("data-xy").split(",");
-   $(this).css({position:"absolute",top:pos.top+parseInt(xy[1])+"px",left:pos.left+parseInt(xy[0])+"px"});
+    $("#price p").hide().each(function(){
+     var xy=$(this).attr("data-xy").split(",");
+     $(this).css({position:"absolute",top:pos.top+parseInt(xy[1])+"px",left:pos.left+parseInt(xy[0])+"px"});
+    });
+    $("figure a").hover(
+      function(){
+        quote=$("#"+this.href.split("#")[1]);
+        quote.show();
+      },
+      function(){quote.hide();}
+    );
+    var chat = io.connect('/chat');
+    chat.on('connect', function () {
+      chat.emit('hi!');
+    });
   });
-  $("figure a").hover(
-    function(){
-      quote=$("#"+this.href.split("#")[1]);
-      quote.show();
-    },
-    function(){quote.hide();}
-  );
-});
 '''
 @style = '''
 #price p {
@@ -38,16 +42,11 @@ text-shadow:2px 2px 2px white, -2px -2px 2px white, -2px 2px 2px white, 2px -2px
 figure ->
   img src:"/images/yaris.gif", alt:"yaris"
   ul ->
-    li ->
-      a href:"#brakes", -> 'Brakes'
-    li ->
-      a href:"#cambelts", -> 'Cambelts'
-    li ->
-      a href:"#chipcode", -> 'Diagnostics'
-    li ->
-      a href:"#servicing", -> 'Servicing'
-    li ->
-      a href:"#battery", -> 'Batteries'
+    li a href:"#brakes", -> 'Brakes'
+    li a href:"#cambelts", -> 'Cambelts'
+    li a href:"#chipcode", -> 'Diagnostics'
+    li a href:"#servicing", -> 'Servicing'
+    li a href:"#battery", -> 'Batteries'
 
 img id:"special", src:"./style/callnow.png", alt:"Call now on 07583338259"
 div '#price', ->

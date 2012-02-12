@@ -1,7 +1,16 @@
-require('./myZappa') ->
+store = require('nstore').extend(require('nstore/query')()).new 'blog.db', ->
+ require('./myZappa') ->
+  @store = store
   #@enable 'default layout'
   @use 'bodyParser', @app.router, 'static'
-  #console.log @
+  #console.log @everyone
+
+  @include './viewsync'
+  
+#    @configure
+ #   development:@email={to:'pip.squeek@hotmail.co.uk'}
+  #  production:@email={to:'watson.stephen5@gmail.com',pwd:'lucy1973'}
+
   @nav [
     '/'
     '/Services'
@@ -15,7 +24,7 @@ require('./myZappa') ->
   @post '/sendform' : ->
     require('./sendmail').send.call(this, @request)
     @redirect '/'
-    
+ 
   @js '/googlea.js': '''
 	  var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-8814132-5']);
@@ -30,7 +39,8 @@ require('./myZappa') ->
 
   @app.params = 
     email:
-      to:'pip.squeek@hotmail.co.uk'
+      to:'watson.stephen5@gmail.com'
+      pwd:'lucy1973'
       error:
         message:''
     mobile:'07583 338259'
