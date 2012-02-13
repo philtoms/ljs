@@ -32,7 +32,7 @@ html lang:'en', ->
       style @iehack
       text '<![endif]-->'
 
-  body ->
+  body id:@id, ->
     div id:'body', ->
       nav ->
         div "#{@nav()}"

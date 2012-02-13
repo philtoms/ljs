@@ -6,15 +6,22 @@ toTitle = (t) -> t.replace(/([A-Z])/g, (str)->' '+str.toLowerCase())
                   .replace(/^../, (str)->str.substr(1).toUpperCase())
 
 # wrap app context with extras and export as 'zappa'
-module.exports = (app) -> 
+module.exports = (db,app) -> 
+
+ store = require('nstore').extend(require('./nstore.query')()).new db, ->
+
   run -> # passes this fn to zappa.run
-    ctx=@
+    @store=store
     @includeRoute = (r,routes) ->
       routeHandler = {} #use this syntax to get a variable into a key
       routeHandler[r.toLowerCase()] = ->
-        ctx.store.all (err,data) =>
+        id = toText r.toLowerCase(),'index'
+        root = (key) -> key.indexOf(id)==0
+        store.find root,(err,data) =>
+
           view = {}
-          view[toText r.toLowerCase(),'index'] =
+          view[id] =
+            id:id
             data: data
             tailscript:'/googlea'
             stylesheet: 'style/basestyle'
@@ -31,5 +38,5 @@ module.exports = (app) ->
            
     @nav = (routes) ->
       @includeRoute r, routes for r in routes
-      
+    
     app.apply(this)

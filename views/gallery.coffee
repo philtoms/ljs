@@ -2,21 +2,40 @@
 @longtitle = 'Gallery'
 @description = 'Images taken of the work carried out by LJS Auto services in and around Swadlincote'
 @introtext = 'A selection of images taken on (and sometimes off!) the job in and around the Swadlincote area.'
-@stylesheets = ['/scripts/fancybox/jquery.fancybox-1.3.4']
-@scripts = ['/scripts/fancybox/jquery.fancybox-1.3.4.pack']
-@script = inline:'''
-$(function(){
-  $("a[rel=group]").fancybox({
-   'transitionIn'		: 'none',
-   'transitionOut'	: 'none',
-   'titlePosition' 	: 'over',
-   'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
-     return '<span id="fancybox-title-over">Image ' +
-             (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
-    }
+@stylesheets = [
+  '/scripts/fancybox/jquery.fancybox-1.3.4'
+  '/scripts/uploadify/uploadify'
+]
+@scripts = [
+  '/scripts/fancybox/jquery.fancybox-1.3.4.pack',
+  '/scripts/uploadify/jquery.uploadify.min'
+  '/scripts/uploadify/swfobject'
+  {inline:'''
+  $(function(){
+    $("a[rel=group]").fancybox({
+     'transitionIn'		: 'none',
+     'transitionOut'	: 'none',
+     'titlePosition' 	: 'over',
+     'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
+       return '<span id="fancybox-title-over">Image ' +
+               (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
+      }
+    });
+    $('#file_upload').uploadify({
+      'uploader'  : '/scripts/uploadify/uploadify.swf',
+      'script'    : '/upload',
+      'cancelImg' : '/scripts/uploadify/cancel.png',
+      'scriptData'  : {'firstName':'Ronnie','age':30},
+      'auto'      : true,
+      'onComplete'  : function(event, ID, fileObj, response, data) {
+        console.log(fileObj);
+        console.log(response);
+        console.log(data);
+      }
+    });
   });
-});
-'''
+  '''}
+]
 @style = '''
 #fancybox-close {height:30px;}
 .last {height:75px;}
@@ -31,10 +50,8 @@ width:75px;
 }
 text-shadow:2px 2px 2px white, -2px -2px 2px white, -2px 2px 2px white, 2px -2px 2px white}
 '''
-@iehack = '''
-/*http://kimili.com/journal/rgba-hsla-css-generator-for-internet-explorer/ */
-#price p {background: transparent;-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#E5FFD800,endColorstr=#E5FFD800)"; /* IE8 */    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#E5FFD800,endColorstr=#E5FFD800);   /* IE6 & 7 */      zoom: 1;}
-'''
+
+div -> input id:'file_upload', name:'file_upload', type:'file'
 
 a title:'Code Check', rel:'group', href:'/images/gallery/IMAG0021.jpg', -> img class:'last', src:'/images/gallery/IMAG0021_s.jpg', alt:'Code Check'
 a title:'The Van', rel:'group', href:'/images/gallery/IMAG0019.jpg', -> img class:'last', src:'/images/gallery/IMAG0019_s.jpg', alt:'The Van'

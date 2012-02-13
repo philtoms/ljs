@@ -11,6 +11,7 @@
   article p {padding-bottom:10px;}
   article img {float:right;width:250px;}
 '''
+
 for x of @data
-  article id:x, ->
+  article id:x.split('/')[1], ->
     @data[x].article

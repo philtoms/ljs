@@ -1,8 +1,6 @@
-store = require('nstore').extend(require('nstore/query')()).new 'blog.db', ->
- require('./myZappa') ->
-  @store = store
+require('./myZappa') 'blog.db', ->
   #@enable 'default layout'
-  @use 'bodyParser', @app.router, 'static'
+  @use @express.bodyParser({uploadDir:'./public/uploads',keepExtensions:true}), @app.router, 'static'
   #console.log @everyone
 
   @include './viewsync'
@@ -25,6 +23,11 @@ store = require('nstore').extend(require('nstore/query')()).new 'blog.db', ->
     require('./sendmail').send.call(this, @request)
     @redirect '/'
  
+  @post '/upload' : ->
+    file = @request.files.Filedata
+    require('fs').rename __dirname+'/'+file.path, __dirname+'/public/images/'+file.name
+    @send('Success!')
+
   @js '/googlea.js': '''
 	  var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-8814132-5']);

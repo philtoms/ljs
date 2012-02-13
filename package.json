@@ -6,7 +6,7 @@
   "repository": {"type": "git", "url": "git://github.com/philtoms/ljs.git"},
   "dependencies": {
     "zappa": "> 0.3.0",
-    "nstore": "> 0.5.1",
+    "nstore": "> 0.5.0",
     "express": "< 3.0.0",
     "socket.io": "0.8.x",
     "coffeekup": "0.3.x",

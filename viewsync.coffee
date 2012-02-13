@@ -14,7 +14,7 @@
             if inEdit=!inEdit
               target=$(e.target).closest('article')
             else
-              @emit sync: {id:target[0].id,inner:target.html()} 
+              @emit sync: {id:$('body')[0].id+'/'+target[0].id,inner:target.html()} 
 
             target.attr("contentEditable",inEdit) 
         
