@@ -25,7 +25,9 @@ require('./myZappa') 'blog.db', ->
  
   @post '/upload' : ->
     file = @request.files.Filedata
-    require('fs').rename __dirname+'/'+file.path, __dirname+'/public/images/'+file.name
+    dest = __dirname+'/public/images/'+(@body.path ? '')+file.name
+    console.log dest
+    require('fs').rename __dirname+'/'+file.path, dest
     @send('Success!')
 
   @js '/googlea.js': '''

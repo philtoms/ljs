@@ -10,7 +10,6 @@ html lang:'en', ->
     script src:'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'
     script src:'http:/socket.io/socket.io.js'
     script src: '/zappa/zappa.js'
-    script src: '/viewsync.js'
     if @scripts
       for s in @scripts
         if typeof s is 'object'
@@ -24,7 +23,10 @@ html lang:'en', ->
         script(src: @script + '.js')
     if @stylesheets
       for s in @stylesheets
-        link rel: 'stylesheet', href: s + '.css'
+        if typeof s is 'object'
+          style s.inline 
+        else  
+          link rel: 'stylesheet', href: s + '.css'
     link(rel: 'stylesheet', href: @stylesheet + '.css') if @stylesheet
     style @style if @style
     if @iehack

@@ -6,6 +6,7 @@
     $ =>
       inEdit=false
       target=null
+      root=$('body')[0].id
       $('body').click (e) =>
         if e.altKey or inEdit
           e.preventDefault()
@@ -14,7 +15,7 @@
             if inEdit=!inEdit
               target=$(e.target).closest('article')
             else
-              @emit sync: {id:$('body')[0].id+'/'+target[0].id,inner:target.html()} 
+              @emit sync: {id:root+'/'+target[0].id,inner:target.html()} 
 
             target.attr("contentEditable",inEdit) 
         
@@ -25,6 +26,6 @@
   @on sync: ->
     data = @data
     store.get @data.id, (e,d,k) ->
-      if d.article!=data.inner
+      if !d || d.article!=data.inner
         store.save data.id,{article:data.inner},->
           console.log "updated " + data.id
