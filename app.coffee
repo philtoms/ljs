@@ -1,6 +1,6 @@
 require('./myZappa') 'blog.db', ->
   #@enable 'default layout'
-  @use @express.bodyParser({uploadDir:'./public/uploads',keepExtensions:true}), @app.router, 'static'
+  @use @express.bodyParser({uploadDir:'./public/uploads',keepExtensions:true}), @app.router, 'static', 'cookies'
   #console.log @everyone
 
   @include './viewsync'
