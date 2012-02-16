@@ -64,5 +64,6 @@
 div -> input id:'file_upload', name:'file_upload', type:'file'
 
 for x of @data
+  console.log x
   article id:x.split('/')[1], ->
     @data[x].article

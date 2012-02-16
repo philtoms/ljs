@@ -1,6 +1,8 @@
 coffee --nodejs --debug app.coffee
 node-inspector
 git clone git://github.com/philtoms/ljs.git
+git add . -- add all
 git rm --cached *
+git add -A -- add + rm
 git commit -a -m "msg"
 git push
