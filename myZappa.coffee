@@ -6,11 +6,11 @@ toTitle = (t) -> t.replace(/([A-Z])/g, (str)->' '+str.toLowerCase())
                   .replace(/^../, (str)->str.substr(1).toUpperCase())
 
 # wrap app context with extras and export as 'zappa'
-module.exports = (db,app) -> 
+module.exports = (port,db,app) -> 
 
  store = require('nstore').extend(require('./nstore.query')()).new db, ->
-
-  run -> # passes this fn to zappa.run
+  
+  run port ? 3000, -> # passes this fn to zappa.run
     @store=store
     @includeRoute = (r,routes) ->
       routeHandler = {} #use this syntax to get a variable into a key

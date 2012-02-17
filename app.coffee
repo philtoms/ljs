@@ -1,4 +1,5 @@
-require('./myZappa') 'blog.db', ->
+ljs = (port) ->
+ require('./myZappa') port, 'blog.db', ->
   #@enable 'default layout'
   @use @express.bodyParser({uploadDir:'./public/uploads',keepExtensions:true}), @app.router, 'static', 'cookies'
   #console.log @everyone
@@ -31,7 +32,7 @@ require('./myZappa') 'blog.db', ->
     @send('Success!')
 
   @js '/googlea.js': '''
-	  var _gaq = _gaq || [];
+      var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-8814132-5']);
     _gaq.push(['_trackPageview']);
   
@@ -56,3 +57,5 @@ require('./myZappa') 'blog.db', ->
       error:
         message:''
     mobile:'07583 338259'
+
+module.exports = ljs
