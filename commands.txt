@@ -6,3 +6,4 @@ git rm --cached *
 git add -A -- add + rm
 git commit -a -m "msg"
 git push
+git push git@github.com:philtoms/ljs.git

@@ -23,10 +23,12 @@
   '/scripts/fancybox/jquery.fancybox-1.3.4.pack'
   '/scripts/uploadify/jquery.uploadify.min'
   '/scripts/uploadify/swfobject'
+  '/uploadify'
   '/viewsync'
   {inline:'''
   $(function(){
-    function fancy(){
+    $.ext = $.ext || {}
+    $.ext.fancybox = function(){
       $("a[rel=group]").fancybox({
        'transitionIn'		: 'none',
        'transitionOut'	: 'none',
@@ -37,26 +39,7 @@
         }
       });
     };
-    fancy();
-    var newPics='';
-    $('#file_upload').uploadify({
-      'uploader'  : '/scripts/uploadify/uploadify.swf',
-      'script'    : '/upload',
-      'cancelImg' : '/scripts/uploadify/cancel.png',
-      'scriptData'  : {'path':'gallery/'},
-      'auto'      : true,
-      'onComplete'  : function(event, ID, fileObj, response, data) {
-        var t = "<a href='/images/gallery/{name}' rel='group'><img src='/images/gallery/{name}' class='last'></a>"
-        var a = t.replace(/{name}/g,fileObj.name);
-        if (!newPics) {
-          var id = $("section article").length+1;
-          $("section").append("<article id='"+id+"'></article>");
-          newPics = $("#"+id);
-        }
-        newPics.append(a);
-        fancy();
-      }
-    });
+    $.ext.fancybox();
   });
   '''}
 ]
@@ -64,6 +47,5 @@
 div -> input id:'file_upload', name:'file_upload', type:'file'
 
 for x of @data
-  console.log x
   article id:x.split('/')[1], ->
     @data[x].article

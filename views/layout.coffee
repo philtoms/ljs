@@ -6,10 +6,11 @@ html lang:'en', ->
     meta name:'keywords', content:@keywords
     meta name:'google-site-verification', content:'XP3TLQI7dFpP_gMFBgpGcs0Xamm4ETkYNURfh7OPHwg'
     title @title if @title
-    script src:'http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-1.7-development-only.js'
+    #script src:'http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-1.7-development-only.js'
+    script src:'/modernizr.js'
     script src:'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'
     script src:'http:/socket.io/socket.io.js'
-    script src: '/zappa/zappa.js'
+    script src:'/zappa/zappa.js'
     if @scripts
       for s in @scripts
         if typeof s is 'object'
