@@ -1,2 +1,3 @@
 require("coffee-script"); 
-require("./app")(process.env.PORT || 3001);
+app=require("./app")
+app(process.env.PORT);
