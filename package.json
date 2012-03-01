@@ -5,6 +5,7 @@
   "author": "Phil Toms <phil.toms@hotmail.co.uk>",
   "repository": {"type": "git", "url": "git://github.com/philtoms/ljs.git"},
   "dependencies": {
+    "coffee-script": "1.2.0",
     "zappa": "> 0.3.0",
     "nstore": "> 0.5.0",
     "express": "< 3.0.0",

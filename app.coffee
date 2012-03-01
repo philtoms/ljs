@@ -1,10 +1,8 @@
 ljs = (port) ->
  require('./myZappa') port, 'blog.db', ->
-  #@enable 'default layout'
   @use @express.bodyParser({uploadDir:'./public/uploads',keepExtensions:true}), @app.router, 'static', 'cookies'
-  #console.log @everyone
 
-  @include './viewsync'
+  @include './lib/viewsync'
   
 #    @configure
  #   development:@email={to:'pip.squeek@hotmail.co.uk'}

@@ -6,10 +6,9 @@ myZappa = (port,db,app) ->
  toText = (r,t) -> if r=='/' then t else r.substr(1)
  toTitle = (r,t) -> toText(r,t).replace(/([A-Z])/g, (m)->' '+m.toLowerCase())
                                .replace(/^../, (m)->m.substr(1).toUpperCase())
-
- store = require('nstore').extend(require('./nstore.query')()).new db, ->
+ store = require('nstore').extend(require('nstore.query')()).new db, ->
   
-  run port, -> # passes this fn to zappa.run
+  zappa port, -> # passes this fn to zappa.run
     @store = store
     @nav = (routes) ->
       for r in routes 
@@ -18,9 +17,8 @@ myZappa = (port,db,app) ->
         routeHandler = {} #use this syntax to get a variable into a key
         routeHandler[r] = ->
           id = toText r,'index'
-          root = (key) -> key.indexOf(id)==0
-          store.find root,(err,data) =>
-
+          page = (key) -> key.indexOf(id)==0
+          store.find page,(err,data) =>
             view = {}
             view[id] =
               id: id
@@ -32,10 +30,10 @@ myZappa = (port,db,app) ->
             
             @render view
 
-        @get routeHandler 
+        @get routeHandler
            
     # apply 'zappa' context here
     app.apply(this)
     
-run = require('zappa')
-module.exports = myZappa
+zappa = require('zappa')
+return module.exports = myZappa
