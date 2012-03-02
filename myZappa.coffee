@@ -6,7 +6,8 @@ myZappa = (port,db,app) ->
  toText = (r,t) -> if r=='/' then t else r.substr(1)
  toTitle = (r,t) -> toText(r,t).replace(/([A-Z])/g, (m)->' '+m.toLowerCase())
                                .replace(/^../, (m)->m.substr(1).toUpperCase())
- store = require('nstore').extend(require('nstore.query')()).new db, ->
+
+ store = require('nstore').extend(require('./lib/nstore.query')()).new db, ->
   
   zappa port, -> # passes this fn to zappa.run
     @store = store

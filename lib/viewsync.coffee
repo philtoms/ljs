@@ -13,25 +13,29 @@
 
   @client '/viewsync.js': ->
     @connect()
-    
-    $ =>
-      inEdit=false
-      target=null
-      root=$('body')[0].id
-      $('body').click (e) =>
-        if e.altKey or inEdit
+    $ ->
+      viewsync = new class
+        edit: new class
+          inEdit=false
+          target=null
+          root=$('body')[0].id
+          toggle: (e) ->
+            if e.altKey or inEdit
 
-          e.preventDefault()
+              e.preventDefault()
 
-          if e.altKey
-            
-            if inEdit=!inEdit
-              target=$(e.target).closest('article')
-            else
-              @emit sync: {id:root+'/'+target[0].id,inner:target.html()} 
+              if e.altKey
+                
+                if inEdit=!inEdit
+                  target=$(e.target).closest('article')
+                else
+                  @emit sync: {id:root+'/'+target[0].id,inner:target.html()} 
 
-            target.attr("contentEditable",inEdit) 
-        
+                target.attr("contentEditable",inEdit) 
+  
+      $('body').click (e) -> viewsync.edit.toggle e
+  
+
   @client '/uploadify.js': ->
     $ ->
       newPics='';
