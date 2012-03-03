@@ -10,6 +10,7 @@ html lang:'en', ->
     script src:'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'
     script src:'http:/socket.io/socket.io.js'
     script src: '/zappa/zappa.js'
+    link(rel: 'stylesheet', href: 'style/basestyle.css')
     if @scripts
       for s in @scripts
         if typeof s is 'object'

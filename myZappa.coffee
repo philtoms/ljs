@@ -25,7 +25,6 @@ myZappa = (port,db,app) ->
               id: id
               data: data
               tailscript: '/googlea'
-              stylesheet: 'style/basestyle'
               nav: routes
               toTitle: toTitle
             
