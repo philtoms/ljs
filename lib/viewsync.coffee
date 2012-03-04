@@ -15,6 +15,9 @@
     io = this
     @connect()
     $ ->
+
+      cmdBar = $("<div id='cmdbar'><input id='file_upload' name='file_upload' type='file'><a href='#new'>New article</a><a href='#save'>Save this article</a><a href='cancel'>Cancel</a></div>");
+      cmdBar.hide().appendTo('body')
       viewsync = new class
         edit: new class
 
@@ -25,10 +28,7 @@
             'scriptData': 'path':'gallery/'
             'auto'      : true
             'onComplete':(event, ID, fileObj, response, data) ->
-              $('#upload').hide()
-              t = "<a href='/images/gallery/{name}' rel='group'><img src='/images/gallery/{name}' class='last'></a>"
-              a = t.replace(/{name}/g,fileObj.name);
-              article.prepend a
+              onUpload(article,fileObj.name)
         
           left=37
           up=38
@@ -36,6 +36,7 @@
           down=40
           inEdit=false
           article=null
+          section=null
           root=$('body')[0].id
 
           toggle: (e) ->
@@ -48,27 +49,45 @@
                 if !inEdit
                   inEdit={}
                   article=$(e.target).closest('article')
+                  section = article.closest("section")
+                  article.before cmdBar.show()
                 else
                   inEdit=false
+                  cmdBar.hide();
                   io.emit sync: {id:root+'/'+article[0].id,inner:article.html()} 
 
                 article.attr("contentEditable",inEdit!=false)
 
               else
                 inEdit[e.target.tagName]=$ e.target
-                console.log inEdit[e.target.tagName]
         
           command: (e) ->
-            if inEdit
-              if e.ctrlKey && e.charCode==102
-                @upload()
+            switch e.target.href.split('#')[1]
+              when "save"
+                  inEdit=false
+                  cmdBar.hide();
+                  io.emit sync: {id:root+'/'+article[0].id,inner:article.html()} 
+                  article.attr("contentEditable",false)
+
+              when "new"
+                article.attr("contentEditable",false)
+                id = section.find("article").length+1
+                section.append articleTemplate id
+                article=$("#"+id)
+                article.attr("contentEditable",true)
+                article.before cmdBar.show()
+                $('html, body').scrollTop article.offset().top
                 
-              console.log e
+            return false;
+            
+          move: (e) ->
+            if inEdit
+                
               if inEdit["IMG"] 
                 float=false
                 switch e.keyCode
-                  when left then float = {float:"left",paddingRight:"5px"}
-                  when right then float = {float:"right",paddingLeft:"5px"}
+                  when left then float = {float:"left"}
+                  when right then float = {float:"right"}
                   else inEdit={}
                 if float
                   inEdit["IMG"].css(float).focus().click()
@@ -79,7 +98,8 @@
               
       #events
       $('body').click (e) -> viewsync.edit.toggle e
-      $('body').keypress (e) -> viewsync.edit.command e
+      $('#cmdbar').click (e) -> viewsync.edit.command e
+      $('body').keypress (e) -> viewsync.edit.move e
   
   @client '/uploadify.js': ->
     $ ->
