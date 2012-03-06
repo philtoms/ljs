@@ -23,7 +23,7 @@ mock fakes =
       find : (q,fn) -> 
         fn()
   
-  'nstore.query' : ->
+  './lib/nstore.query' : ->
   
 sut = require '../myZappa.coffee'
       
