@@ -1,6 +1,6 @@
 ljs = (port) ->
  require('./myZappa') port, 'blog.db', ->
-  @use @express.bodyParser({uploadDir:'./public/uploads',keepExtensions:true}), @app.router, 'static', 'cookies'
+  @use @express.bodyParser({uploadDir:'./public/uploads'}), @app.router, 'static', 'cookies'
 
   @include './lib/viewsync'
   

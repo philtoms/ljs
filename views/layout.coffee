@@ -6,10 +6,11 @@ html lang:'en', ->
     meta name:'keywords', content:@keywords
     meta name:'google-site-verification', content:'XP3TLQI7dFpP_gMFBgpGcs0Xamm4ETkYNURfh7OPHwg'
     title @title if @title
+#    script src:'/modernizr.js'
     script src:'http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-1.7-development-only.js'
     script src:'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'
-    script src:'http:/socket.io/socket.io.js'
-    script src: '/zappa/zappa.js'
+    script src:'/socket.io/socket.io.js'
+    script src:'/zappa/zappa.js'
     link(rel: 'stylesheet', href: 'style/basestyle.css')
     if @scripts
       for s in @scripts

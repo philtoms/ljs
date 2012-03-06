@@ -18,10 +18,6 @@
       },
       function(){quote.hide();}
     );
-    var chat = io.connect('/chat');
-    chat.on('connect', function () {
-      chat.emit('hi!');
-    });
   });
 '''
 @style = '''

@@ -16,8 +16,35 @@
     @connect()
     $ ->
 
-      cmdBar = $("<div id='cmdbar'><input id='file_upload' name='file_upload' type='file'><a href='#new'>New article</a><a href='#save'>Save this article</a><a href='cancel'>Cancel</a></div>");
+      cmdBar = $("<div id='cmdbar'><input id='file_upload' name='file_upload' type='file'><a href='#new'>New article</a><a href='#save'>Save this article</a><a href='#cancel'>Cancel</a></div>");
       cmdBar.hide().appendTo('body')
+      savedRange=false
+      saveSelection = ->
+        if window.getSelection
+          savedRange = window.getSelection().getRangeAt(0)
+        else if document.selection #ie
+          savedRange = document.selection.createRange()
+
+      restoreSelection = (area) ->
+        if !savedRange 
+          area.focus()
+          saveSelection()
+        area.focus()
+        if savedRange != null
+          if window.getSelection
+            s = window.getSelection()
+            if s.rangeCount > 0 
+                s.removeAllRanges()
+            s.addRange(savedRange)
+          else 
+            if document.createRange
+              window.getSelection().addRange(savedRange);
+            else 
+              if document.selection #ie
+                savedRange.select()
+                
+        savedRange=false
+
       viewsync = new class
         edit: new class
 
@@ -37,6 +64,7 @@
           inEdit=false
           article=null
           section=null
+          empty=''
           root=$('body')[0].id
 
           toggle: (e) ->
@@ -48,6 +76,7 @@
                 
                 if !inEdit
                   inEdit={}
+                  saveSelection()
                   article=$(e.target).closest('article')
                   section = article.closest("section")
                   article.before cmdBar.show()
@@ -56,7 +85,7 @@
                   cmdBar.hide();
                   io.emit sync: {id:root+'/'+article[0].id,inner:article.html()} 
 
-                article.attr("contentEditable",inEdit!=false)
+                @contentEdit inEdit!=false
 
               else
                 inEdit[e.target.tagName]=$ e.target
@@ -64,43 +93,53 @@
           command: (e) ->
             switch e.target.href.split('#')[1]
               when "save"
-                  inEdit=false
-                  cmdBar.hide();
-                  io.emit sync: {id:root+'/'+article[0].id,inner:article.html()} 
-                  article.attr("contentEditable",false)
+                io.emit sync: {id:root+'/'+article[0].id,inner:article.html()} 
+                @contentEdit false
+                
+              when "cancel"
+                @contentEdit false                
 
               when "new"
-                article.attr("contentEditable",false)
+                @contentEdit false
                 id = section.find("article").length+1
                 section.append articleTemplate id
-                article=$("#"+id)
-                article.attr("contentEditable",true)
+                article = $("#"+id)
+                empty = article.html()
                 article.before cmdBar.show()
-                $('html, body').scrollTop article.offset().top
-                
+                $('html, body').animate({scrollTop:article.offset().top,500}, =>
+                    @contentEdit true)
+
             return false;
             
           move: (e) ->
-            if inEdit
-                
-              if inEdit["IMG"] 
-                float=false
-                switch e.keyCode
-                  when left then float = {float:"left"}
-                  when right then float = {float:"right"}
-                  else inEdit={}
-                if float
-                  inEdit["IMG"].css(float).focus().click()
-                  e.preventDefault()
+            if inEdit["IMG"] 
+              float=false
+              switch e.keyCode
+                when left then float = {float:"left"}
+                when right then float = {float:"right"}
+                else inEdit={}
+              if float
+                inEdit["IMG"].css(float).focus().click()
+                e.preventDefault()
                   
           upload: ->
             article.prepend($('#upload').show());
-              
+          
+          contentEdit: (editable) ->
+            article.attr("contentEditable",editable)
+            if editable
+              restoreSelection article
+            else
+              if article.html() == empty
+                article.remove()
+              inEdit=false
+              cmdBar.hide()
+
       #events
       $('body').click (e) -> viewsync.edit.toggle e
       $('#cmdbar').click (e) -> viewsync.edit.command e
       $('body').keypress (e) -> viewsync.edit.move e
-  
+      
   @client '/uploadify.js': ->
     $ ->
       newPics='';
